@@ -18,7 +18,7 @@ class RegisterController extends AbstractController
     {
         $errors = [];
 
-        if(!empty($_GET['user'])) {
+        if(!empty($_POST['user'])) {
 
             $user = $_POST['user'];
             
@@ -39,10 +39,12 @@ class RegisterController extends AbstractController
                 // Par défaut l'utilisateur n'est pas admin
                 $user['isadmin'] = 0;
 
+                $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
+
                 // On persite les informations en BDD
                 $id = $this->userRepository->insert($user);
 
-                // On authentifie l'utilsateur directement
+                // On authentifie l'utilisateur directement
                 $_SESSION['user'] = [
                     'id' => $id,
                     'username' => $user['firstname']

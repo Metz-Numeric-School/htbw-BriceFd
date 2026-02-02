@@ -10,6 +10,7 @@ Je recherche par exemple deploiementmns et ils me proposent plusieurs extensions
 En appuyant sur acheter on peut choisir le temps qu'on veut garder le nom de domaine puis ovh nous propose de lier un site web au domaine
 
 2. Comment faire pour qu'un nom de domaine pointe vers une adresse IP spécifique ?
+Il faut changer les paramètres dans l'hébergeur pour qu'il pointe vers l'adresse IP 
 
 4. Comment mettre en place un certificat SSL ?
 Il faut générer une demande de certificat CSR qui sont en 2 parties, une clé privée et clé publique.  
