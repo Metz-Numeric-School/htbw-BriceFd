@@ -14,13 +14,14 @@ class SecurityController extends AbstractController
         $this->userRepository = new UserRepository();
     }
 
-    public function login()
+      public function login()
     {
-
         if(!empty($_SESSION['user']))
         {
             $_SESSION['admin'] ? header('Location: /admin/dashboard') : header('Location: /user/dashboard'); die;
         }
+
+        $error = null;
 
         if(!empty($_POST)) {
             $username = $_POST['username'] ?? '';
@@ -28,32 +29,32 @@ class SecurityController extends AbstractController
 
             $user = $this->userRepository->findByEmail($username);
 
-            if($user) {
-                // On vérifie le mot de passe
-                if($password == $user->getPassword()) {
-    
+            if(!$user) {
+                $error = 'Invalid username or password';
+            } else {
+                // debug -> écrit dans var/logs/debug.log (créer le dossier si nécessaire)
+                error_log('DEBUG findByEmail result: '.print_r($user, true)."\n", 3, __DIR__ . '/../../var/logs/debug.log');
+                error_log('DEBUG input password: '.substr($password,0,50)."\n", 3, __DIR__ . '/../../var/logs/debug.log');
+
+                if (password_verify($password, $user->getPassword())) {
+
                     $_SESSION['user'] = [
                         'id' => $user->getId(),
                         'username' => $user->getFirstname(),
                     ];
 
                     if($user->getIsadmin()) {
+                        $_SESSION['admin'] = $user->getIsadmin();
                         header('Location: /admin/dashboard');
-                        $_SESSION['admin'] = $user->getIsAdmin();
+                        exit;
+                    } else {
+                        header('Location: /dashboard');
                         exit;
                     }
-                    else
-                    {
-                        header('Location: /dashboard');
-                    }
-                }
-                else
-                {
+                } else {
                     $error = 'Invalid username or password';
                 }
             }
-
-            $error = 'Invalid username or password';
         }
 
         return $this->render('security/login.html.php', [
@@ -61,7 +62,6 @@ class SecurityController extends AbstractController
             'error' => $error ?? null,
         ]);
     }
-
     public function logout()
     {
         unset($_SESSION['user']);
