@@ -20,11 +20,18 @@ class UserRepository extends AbstractRepository
     }
 
     public function findByEmail(string $email)
-    {
-        $sql = "SELECT * FROM mns_user WHERE email = '$email'";
-        $query = $this->getConnection()->query($sql);
-        return EntityMapper::map(User::class, $query->fetch());
+{
+    $sql = "SELECT * FROM mns_user WHERE email = '$email'";
+    $query = $this->getConnection()->query($sql);
+    $data = $query->fetch(); // array ou false
+
+    if ($data === false) {
+        return null; // aucun user avec cet email
     }
+
+    return EntityMapper::map(User::class, $data);
+}
+
 
     public function insert(array $data = array())
     {

@@ -28,3 +28,7 @@ git init --bare deploy.git
 mkdir -p /www/wwwroot/192.168.23.136
 git --work-tree=/www/wwwroot/192.168.23.136 --git-dir=/var/exam-deploy/deploy.git checkout -f main
 cd /www/wwwroot/192.168.23.136
+
+J'ai changé le DB_PASSWORD="" avec le MDP donné par aapanel dans databases puis root password.
+J'ai ensuite fait un composer install puis php bin/create-database.
+J'ai changé dans domain manager danss aapanel, j'ai mis le domaine qu'on m'a donné frydman.dfs.lan
